@@ -58,6 +58,38 @@ The installer will:
 
 ---
 
+## Command-Line Interface (CLI)
+
+Once installed, MacDroid is available anywhere in your terminal as the `macdroid` command:
+
+```bash
+macdroid
+```
+
+### Commands & Options
+
+| Command / Flag | Description |
+| :--- | :--- |
+| `macdroid` | Launches the MacDroid screen mirroring & desktop control window. |
+| `macdroid -h`, `macdroid --help` | Shows help options and usage syntax. |
+| `macdroid -v`, `macdroid --version` | Displays the installed MacDroid version number. |
+
+### Launcher Details & Paths
+
+* **CLI Launcher**: `~/.local/bin/macdroid`
+* **App Installation**: `~/.macdroid/app/`
+* **Configuration & Settings**: `~/.macdroid/config.json`
+* **Application Logs**: `~/.macdroid/macdroid.log`
+
+> [!TIP]
+> If running `macdroid` in the same terminal window displays `command not found`, reload your shell profile:
+> ```bash
+> source ~/.zshrc   # (or source ~/.bash_profile for bash)
+> ```
+> Alternatively, you can open a new terminal tab or window.
+
+---
+
 ## Android Phone Setup (Step-by-Step from A to Z)
 
 To use MacDroid, you only need to enable **USB Debugging** once on your Android phone.

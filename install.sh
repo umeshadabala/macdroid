@@ -77,7 +77,7 @@ PY_VER="$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_
 echo -e "${GREEN}✓ Python found:${RESET} $(python3 --version)"
 
 # 6. Target Directory Setup
-INSTALL_DIR="$HOME/.macdroid"
+INSTALL_DIR="$HOME/.macdroid/app"
 REPO_URL="https://github.com/umeshadabala/macdroid.git"
 
 if [ -f "./run.py" ] && [ -d "./app" ]; then
@@ -86,11 +86,18 @@ if [ -f "./run.py" ] && [ -d "./app" ]; then
     echo -e "${BLUE}Installing from current directory:${RESET} $APP_DIR"
 else
     # Running via curl | bash
+    # Clean up stale virtual environment in ~/.macdroid if leftover from earlier versions
+    if [ -d "$HOME/.macdroid/.venv" ] && [ ! -f "$HOME/.macdroid/run.py" ]; then
+        rm -rf "$HOME/.macdroid/.venv"
+    fi
+
     echo -e "${BLUE}Cloning MacDroid into:${RESET} $INSTALL_DIR"
-    if [ -d "$INSTALL_DIR" ]; then
+    mkdir -p "$HOME/.macdroid"
+    if [ -d "$INSTALL_DIR/.git" ]; then
         echo -e "${YELLOW}Updating existing installation...${RESET}"
-        git -C "$INSTALL_DIR" pull --rebase || true
+        git -C "$INSTALL_DIR" pull --rebase
     else
+        rm -rf "$INSTALL_DIR"
         git clone "$REPO_URL" "$INSTALL_DIR"
     fi
     APP_DIR="$INSTALL_DIR"
@@ -114,17 +121,6 @@ BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
 LAUNCHER="$BIN_DIR/macdroid"
 
-cat << 'EOF' > "$LAUNCHER"
-#!/usr/bin/env bash
-SCRIPT_DIR="$(dirname "$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")")"
-APP_DIR="${HOME}/.macdroid"
-if [ ! -d "$APP_DIR" ]; then
-    APP_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-fi
-exec "$APP_DIR/.venv/bin/python" "$APP_DIR/run.py" "$@"
-EOF
-
-# Ensure real path resolution for macOS
 cat << EOF > "$LAUNCHER"
 #!/usr/bin/env bash
 APP_DIR="$APP_DIR"

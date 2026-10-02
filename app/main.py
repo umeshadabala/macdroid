@@ -4,6 +4,7 @@ Main entry point for MacDroid application.
 
 from __future__ import annotations
 
+import argparse
 import os
 import signal
 import sys
@@ -22,6 +23,19 @@ log = get_logger("main")
 
 def main() -> int:
     """Launch MacDroid."""
+    parser = argparse.ArgumentParser(
+        prog="macdroid",
+        description="MacDroid — Lightweight, low-latency Android screen mirroring & desktop control for macOS.",
+    )
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version="MacDroid 1.0.0",
+        help="Show MacDroid version number and exit.",
+    )
+    # Parse known args so standard help/version flags work, while Qt arguments pass through
+    _, remaining_args = parser.parse_known_args()
+
     log.info("Starting MacDroid on macOS...")
 
     # Enable native high DPI scaling
